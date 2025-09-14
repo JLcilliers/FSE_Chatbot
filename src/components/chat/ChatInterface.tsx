@@ -18,7 +18,14 @@ export function ChatInterface({
   proposalTitle,
   className
 }: ChatInterfaceProps) {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      id: 'welcome',
+      role: 'assistant',
+      content: 'Hello! I\'m here to answer any questions you have about our company, services, pricing, or this proposal. How can I help you today?',
+      timestamp: new Date()
+    }
+  ]);
   const [isLoading, setIsLoading] = useState(false);
   const [conversationId, setConversationId] = useState<string | null>(null);
 

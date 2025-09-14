@@ -14,7 +14,7 @@ export default function ProposalViewerPage() {
   const [proposal, setProposal] = useState<Proposal | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
-  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(true); // Chat open by default
 
   useEffect(() => {
     if (shareToken) {
@@ -94,12 +94,22 @@ export default function ProposalViewerPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Document Viewer */}
           <div className={`${isChatOpen ? 'lg:col-span-2' : 'lg:col-span-3'}`}>
-            <Card className="h-[calc(100vh-200px)]">
-              <iframe
-                src={proposal.file_url}
-                className="w-full h-full rounded-lg"
-                title="Proposal Document"
-              />
+            <Card className="h-[calc(100vh-200px)] p-0 overflow-hidden">
+              {proposal.file_type?.includes('pdf') ? (
+                <iframe
+                  src={`${proposal.file_url}#toolbar=0&navpanes=0&scrollbar=1`}
+                  className="w-full h-full"
+                  title="Proposal Document"
+                  style={{ border: 'none' }}
+                />
+              ) : (
+                <iframe
+                  src={`https://docs.google.com/viewer?url=${encodeURIComponent(proposal.file_url)}&embedded=true`}
+                  className="w-full h-full"
+                  title="Proposal Document"
+                  style={{ border: 'none' }}
+                />
+              )}
             </Card>
           </div>
 
