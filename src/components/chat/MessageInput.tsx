@@ -9,12 +9,14 @@ interface MessageInputProps {
   onSend: (message: string) => void;
   isLoading?: boolean;
   placeholder?: string;
+  className?: string;
 }
 
 export function MessageInput({
   onSend,
   isLoading = false,
-  placeholder = 'Ask a question about the proposal...'
+  placeholder = 'Ask a question about the proposal...',
+  className = ''
 }: MessageInputProps) {
   const [message, setMessage] = useState('');
 
@@ -33,7 +35,7 @@ export function MessageInput({
   };
 
   return (
-    <div className="border-t bg-background p-4">
+    <div className={`border-t bg-background p-4 ${className}`}>
       <div className="max-w-3xl mx-auto">
         <div className="flex gap-2">
           <Textarea
