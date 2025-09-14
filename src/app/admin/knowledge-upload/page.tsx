@@ -27,20 +27,16 @@ interface KnowledgeEntry {
 }
 
 export default function KnowledgeUploadPage() {
-  const [adminPassword, setAdminPassword] = useState('');
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [adminPassword, setAdminPassword] = useState('admin');
+  const [isAuthenticated, setIsAuthenticated] = useState(true); // Always authenticated
   const [entries, setEntries] = useState<KnowledgeEntry[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [extractedContent, setExtractedContent] = useState('');
 
+  // Authentication removed - no password needed
   const handleAuth = () => {
-    if (adminPassword === process.env.NEXT_PUBLIC_ADMIN_PASSWORD) {
-      setIsAuthenticated(true);
-      toast.success('Authenticated successfully');
-    } else {
-      toast.error('Invalid password');
-    }
+    setIsAuthenticated(true);
   };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -69,9 +65,6 @@ export default function KnowledgeUploadPage() {
     try {
       const response = await fetch('/api/knowledge/extract', {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${adminPassword}`,
-        },
         body: formData,
       });
 
@@ -132,7 +125,6 @@ export default function KnowledgeUploadPage() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${adminPassword}`,
         },
         body: JSON.stringify({ entries }),
       });
@@ -153,25 +145,7 @@ export default function KnowledgeUploadPage() {
     }
   };
 
-  if (!isAuthenticated) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
-        <Card className="p-6 w-full max-w-md">
-          <h2 className="text-2xl font-bold mb-4">Admin Authentication</h2>
-          <Input
-            type="password"
-            placeholder="Enter admin password"
-            value={adminPassword}
-            onChange={(e) => setAdminPassword(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && handleAuth()}
-          />
-          <Button onClick={handleAuth} className="w-full mt-4">
-            Authenticate
-          </Button>
-        </Card>
-      </div>
-    );
-  }
+  // No authentication needed - removed password check
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">

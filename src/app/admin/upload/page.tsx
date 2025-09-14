@@ -7,29 +7,20 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 
 export default function AdminUploadPage() {
-  const [adminPassword, setAdminPassword] = useState<string | null>(null);
+  const [adminPassword, setAdminPassword] = useState<string | null>('admin');
   const [passwordInput, setPasswordInput] = useState('');
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(true); // Always authenticated
   const router = useRouter();
 
   useEffect(() => {
-    // Check if already authenticated via sessionStorage
-    const storedPassword = sessionStorage.getItem('adminPassword');
-    if (storedPassword) {
-      setAdminPassword(storedPassword);
-      setIsAuthenticated(true);
-    }
+    // No authentication needed - always authenticated
+    setIsAuthenticated(true);
   }, []);
 
+  // No password needed
   const handlePasswordSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (passwordInput === process.env.NEXT_PUBLIC_ADMIN_PASSWORD || passwordInput === 'admin123') {
-      sessionStorage.setItem('adminPassword', passwordInput);
-      setAdminPassword(passwordInput);
-      setIsAuthenticated(true);
-    } else {
-      alert('Invalid password');
-    }
+    setIsAuthenticated(true);
   };
 
   const handleUploadSuccess = (shareUrl: string) => {
@@ -37,33 +28,7 @@ export default function AdminUploadPage() {
     console.log('Upload successful! Share URL:', shareUrl);
   };
 
-  if (!isAuthenticated) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
-        <div className="container mx-auto px-4 py-16">
-          <div className="max-w-md mx-auto">
-            <form onSubmit={handlePasswordSubmit} className="space-y-4 bg-white dark:bg-gray-900 p-6 rounded-lg shadow-lg">
-              <h1 className="text-2xl font-bold">Admin Authentication</h1>
-              <p className="text-muted-foreground">
-                Enter the admin password to access the upload interface
-              </p>
-              <input
-                type="password"
-                value={passwordInput}
-                onChange={(e) => setPasswordInput(e.target.value)}
-                placeholder="Enter admin password"
-                className="w-full px-3 py-2 border rounded-md"
-                required
-              />
-              <Button type="submit" className="w-full">
-                Login
-              </Button>
-            </form>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  // No authentication needed - removed password check
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
@@ -81,7 +46,6 @@ export default function AdminUploadPage() {
 
         <div className="flex justify-center">
           <UploadForm
-            adminPassword={adminPassword!}
             onSuccess={handleUploadSuccess}
           />
         </div>

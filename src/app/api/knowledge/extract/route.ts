@@ -6,11 +6,7 @@ export const runtime = 'nodejs';
 
 export async function POST(request: NextRequest) {
   try {
-    // Validate admin password
-    const authHeader = request.headers.get('authorization');
-    if (!authHeader || authHeader !== `Bearer ${process.env.ADMIN_PASSWORD}`) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    // No authentication needed - removed password check
 
     const formData = await request.formData();
     const file = formData.get('file') as File;

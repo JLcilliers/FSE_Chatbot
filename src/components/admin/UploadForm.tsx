@@ -9,10 +9,10 @@ import { Upload, FileText, CheckCircle, AlertCircle } from 'lucide-react';
 
 interface UploadFormProps {
   onSuccess?: (shareUrl: string) => void;
-  adminPassword: string;
+  adminPassword?: string; // Optional, not used anymore
 }
 
-export function UploadForm({ onSuccess, adminPassword }: UploadFormProps) {
+export function UploadForm({ onSuccess }: UploadFormProps) {
   const [file, setFile] = useState<File | null>(null);
   const [title, setTitle] = useState('');
   const [clientName, setClientName] = useState('');
@@ -67,9 +67,6 @@ export function UploadForm({ onSuccess, adminPassword }: UploadFormProps) {
 
       const response = await fetch('/api/upload', {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${adminPassword}`,
-        },
         body: formData,
       });
 
