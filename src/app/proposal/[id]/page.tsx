@@ -9,7 +9,6 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { MessageSquare, FileText, X, Shield, Building2 } from 'lucide-react';
 import { motion } from 'framer-motion';
-import '@/styles/pdf-viewer.css';
 import type { Proposal } from '@/types/database';
 
 export default function ProposalViewerPage() {
