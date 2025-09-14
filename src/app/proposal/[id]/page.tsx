@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { ChatInterface } from '@/components/chat/ChatInterface';
 import { EnhancedChatInterface } from '@/components/chat/EnhancedChatInterface';
-import { PremiumPDFViewer } from '@/components/proposal/PremiumPDFViewer';
+import { SinglePagePDFViewer } from '@/components/proposal/SinglePagePDFViewer';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { MessageSquare, FileText, X, Shield, Building2 } from 'lucide-react';
@@ -123,7 +123,7 @@ export default function ProposalViewerPage() {
             transition={{ duration: 0.5, ease: 'easeOut' }}
             className={`${isChatOpen ? 'w-[65%]' : 'w-full'} transition-all duration-300`}
           >
-            <PremiumPDFViewer
+            <SinglePagePDFViewer
               fileUrl={proposal.file_url}
               fileType={proposal.file_type || 'application/pdf'}
               fileName={proposal.file_name || 'Proposal'}

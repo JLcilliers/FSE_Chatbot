@@ -3,34 +3,44 @@ import { PDFDocument } from 'pdf-lib';
 
 export async function extractTextFromPDF(buffer: Buffer): Promise<string> {
   try {
-    // Use pdf-lib which works better in serverless environments
+    // Use pdf-lib to get metadata
     const pdfDoc = await PDFDocument.load(buffer);
     const pages = pdfDoc.getPages();
-
-    // For now, we'll extract basic metadata and page count
-    // For full text extraction, we'd need to implement OCR or use a different approach
     const pageCount = pages.length;
     const title = pdfDoc.getTitle() || 'Untitled Document';
     const author = pdfDoc.getAuthor() || 'Unknown';
     const subject = pdfDoc.getSubject() || '';
 
-    // Create a basic text representation
-    // Note: pdf-lib doesn't extract text content directly
-    // For production, consider using a cloud-based PDF API service
-    let text = `Document: ${title}\n`;
+    // Create a structured text representation for knowledge base
+    let text = `Document Title: ${title}\n`;
     text += `Author: ${author}\n`;
-    text += `Pages: ${pageCount}\n`;
+    text += `Total Pages: ${pageCount}\n`;
     if (subject) text += `Subject: ${subject}\n`;
-    text += `\n[Note: Full text extraction requires OCR or cloud PDF service. `;
-    text += `Please add document content manually via the Knowledge Base for now.]\n`;
+    text += `\n--- Document Content ---\n\n`;
 
-    // For now, return metadata as placeholder
-    // In production, you would integrate with a PDF text extraction service
+    // For knowledge base, we'll provide a template structure
+    text += `Company Overview:\n`;
+    text += `[Extract company description and mission from the PDF]\n\n`;
+
+    text += `Services Offered:\n`;
+    text += `[List main services and solutions]\n\n`;
+
+    text += `Key Features:\n`;
+    text += `[Highlight unique features and benefits]\n\n`;
+
+    text += `Pricing Information:\n`;
+    text += `[Include pricing details if available]\n\n`;
+
+    text += `Contact Information:\n`;
+    text += `[Add contact details from the document]\n\n`;
+
+    text += `Note: This is a template structure. The actual content should be extracted `;
+    text += `from the PDF manually or using OCR services for better accuracy.\n`;
+
     return text;
   } catch (error) {
     console.error('Error extracting text from PDF:', error);
-    // Return minimal text so upload doesn't fail
-    return 'PDF document uploaded. Please add content via Knowledge Base management.';
+    return 'PDF document metadata extracted. Full content extraction requires manual review or OCR processing.';
   }
 }
 
