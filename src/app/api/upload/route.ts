@@ -65,16 +65,35 @@ export async function POST(request: NextRequest) {
 
     // Upload file to Supabase Storage
     const fileName = `${shareToken}-${file.name}`;
+
+    // First check if bucket exists and create if needed
+    const { data: buckets } = await supabaseAdmin.storage.listBuckets();
+    const proposalsBucket = buckets?.find(b => b.name === 'proposals');
+
+    if (!proposalsBucket) {
+      const { error: createError } = await supabaseAdmin.storage.createBucket('proposals', {
+        public: true
+      });
+      if (createError) {
+        console.error('Error creating bucket:', createError);
+        return NextResponse.json(
+          { error: 'Storage bucket not configured. Please create "proposals" bucket in Supabase.' },
+          { status: 500 }
+        );
+      }
+    }
+
     const { data: uploadData, error: uploadError } = await supabaseAdmin.storage
       .from('proposals')
       .upload(fileName, buffer, {
         contentType: fileType,
+        upsert: true
       });
 
     if (uploadError) {
       console.error('Error uploading file:', uploadError);
       return NextResponse.json(
-        { error: 'Failed to upload file' },
+        { error: `Failed to upload file: ${uploadError.message}` },
         { status: 500 }
       );
     }
