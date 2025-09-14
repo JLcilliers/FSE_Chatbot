@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { ChatInterface } from '@/components/chat/ChatInterface';
+import { DocumentViewer } from '@/components/proposal/DocumentViewer';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { MessageSquare, FileText, X } from 'lucide-react';
@@ -94,23 +95,12 @@ export default function ProposalViewerPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Document Viewer */}
           <div className={`${isChatOpen ? 'lg:col-span-2' : 'lg:col-span-3'}`}>
-            <Card className="h-[calc(100vh-200px)] p-0 overflow-hidden">
-              {proposal.file_type?.includes('pdf') ? (
-                <iframe
-                  src={`${proposal.file_url}#toolbar=0&navpanes=0&scrollbar=1`}
-                  className="w-full h-full"
-                  title="Proposal Document"
-                  style={{ border: 'none' }}
-                />
-              ) : (
-                <iframe
-                  src={`https://docs.google.com/viewer?url=${encodeURIComponent(proposal.file_url)}&embedded=true`}
-                  className="w-full h-full"
-                  title="Proposal Document"
-                  style={{ border: 'none' }}
-                />
-              )}
-            </Card>
+            <DocumentViewer
+              fileUrl={proposal.file_url}
+              fileType={proposal.file_type || 'application/pdf'}
+              fileName={proposal.file_name || 'Proposal'}
+              className="h-[calc(100vh-200px)]"
+            />
           </div>
 
           {/* Chat Interface */}

@@ -22,7 +22,7 @@ export function ChatInterface({
     {
       id: 'welcome',
       role: 'assistant',
-      content: 'Hello! I\'m here to answer any questions you have about our company, services, pricing, or this proposal. How can I help you today?',
+      content: 'Hello! I\'m here to help you learn more about our company. Feel free to ask me about our services, pricing, team, past projects, or anything else you\'d like to know about working with us. How can I assist you today?',
       timestamp: new Date()
     }
   ]);
