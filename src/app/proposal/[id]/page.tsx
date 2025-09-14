@@ -3,10 +3,14 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { ChatInterface } from '@/components/chat/ChatInterface';
+import { EnhancedChatInterface } from '@/components/chat/EnhancedChatInterface';
+import { PDFContainer } from '@/components/proposal/PDFViewer/PDFContainer';
 import { DocumentViewer } from '@/components/proposal/DocumentViewer';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { MessageSquare, FileText, X } from 'lucide-react';
+import { MessageSquare, FileText, X, Shield, Building2 } from 'lucide-react';
+import { motion } from 'framer-motion';
+import '@/styles/pdf-viewer.css';
 import type { Proposal } from '@/types/database';
 
 export default function ProposalViewerPage() {
@@ -68,52 +72,95 @@ export default function ProposalViewerPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      {/* Header */}
-      <div className="bg-white dark:bg-gray-800 border-b">
-        <div className="container mx-auto px-4 py-4">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
+      {/* Premium Header */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-white shadow-sm border-b"
+      >
+        <div className="container mx-auto px-6 py-5">
           <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-xl font-semibold">{proposal.title}</h1>
-              <p className="text-sm text-muted-foreground">
-                Prepared for {proposal.client_name}
-              </p>
-            </div>
-            <Button
-              onClick={() => setIsChatOpen(!isChatOpen)}
-              variant={isChatOpen ? 'default' : 'outline'}
-            >
-              <MessageSquare className="h-4 w-4 mr-2" />
-              {isChatOpen ? 'Hide Chat' : 'Ask Questions'}
-            </Button>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Document Viewer */}
-          <div className={`${isChatOpen ? 'lg:col-span-2' : 'lg:col-span-3'}`}>
-            <DocumentViewer
-              fileUrl={proposal.file_url}
-              fileType={proposal.file_type || 'application/pdf'}
-              fileName={proposal.file_name || 'Proposal'}
-              className="h-[calc(100vh-200px)]"
-            />
-          </div>
-
-          {/* Chat Interface */}
-          {isChatOpen && (
-            <div className="lg:col-span-1">
-              <div className="sticky top-4">
-                <ChatInterface
-                  proposalId={proposal.id}
-                  proposalTitle={proposal.title}
-                  className="h-[calc(100vh-200px)]"
-                />
+            <div className="flex items-center gap-4">
+              <Building2 className="h-8 w-8 text-primary" />
+              <div>
+                <h1 className="text-2xl font-semibold text-gray-900">
+                  Proposal Review & Consultation
+                </h1>
+                <div className="flex items-center gap-3 mt-1">
+                  <p className="text-sm text-muted-foreground">
+                    Prepared for <span className="font-medium text-gray-900">{proposal.client_name}</span>
+                  </p>
+                  <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full font-medium">
+                    Ready for Review
+                  </span>
+                </div>
               </div>
             </div>
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <Shield className="h-4 w-4" />
+                <span>Secure conversation</span>
+              </div>
+              <Button
+                onClick={() => setIsChatOpen(!isChatOpen)}
+                variant={isChatOpen ? 'default' : 'outline'}
+                className="shadow-sm"
+              >
+                <MessageSquare className="h-4 w-4 mr-2" />
+                {isChatOpen ? 'Hide Assistant' : 'Open Assistant'}
+              </Button>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Main Content with Premium Spacing */}
+      <div className="container mx-auto px-6 py-10">
+        <div className="flex gap-8">
+          {/* Document Viewer - 65-70% width */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, ease: 'easeOut' }}
+            className={`${isChatOpen ? 'w-[65%]' : 'w-full'} transition-all duration-300`}
+          >
+            {proposal.file_type?.toLowerCase().includes('pdf') ? (
+              <PDFContainer
+                fileUrl={proposal.file_url}
+                fileName={proposal.file_name || 'Proposal'}
+                className="h-[calc(100vh-200px)]"
+              />
+            ) : (
+              <DocumentViewer
+                fileUrl={proposal.file_url}
+                fileType={proposal.file_type || 'application/pdf'}
+                fileName={proposal.file_name || 'Proposal'}
+                className="h-[calc(100vh-200px)]"
+              />
+            )}
+          </motion.div>
+
+          {/* Chat Interface - 35% width with subtle divider */}
+          {isChatOpen && (
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.3, ease: 'easeOut' }}
+              className="w-[35%] min-w-[400px]"
+            >
+              <div className="sticky top-6">
+                <div className="relative">
+                  {/* Subtle divider */}
+                  <div className="absolute -left-4 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-gray-200 to-transparent" />
+                  <EnhancedChatInterface
+                    proposalId={proposal.id}
+                    proposalTitle={proposal.title}
+                    className="h-[calc(100vh-240px)] shadow-xl"
+                  />
+                </div>
+              </div>
+            </motion.div>
           )}
         </div>
       </div>
@@ -132,7 +179,7 @@ export default function ProposalViewerPage() {
                 <X className="h-4 w-4" />
               </Button>
             </div>
-            <ChatInterface
+            <EnhancedChatInterface
               proposalId={proposal.id}
               proposalTitle={proposal.title}
               className="flex-1 border-0 rounded-none"
